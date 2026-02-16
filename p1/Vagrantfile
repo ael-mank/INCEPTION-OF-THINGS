@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "debian/bookworm64" # Latest stable Debian release
+  config.vm.provider "virtualbox" do |v|
+    v.cpus = 1 # Minumum 2 CPUs for K3s server
+    v.memory = 1024 # Minimum 2GB RAM for K3s server
+  end
+  
+  config.vm.define "yrignyS" do |server|
+    server.vm.hostname = "yrignyS"
+    server.vm.network "private_network", ip: "192.168.56.110"
+    server.vm.provision "shell", path: "scripts/server.sh"
+  end
+
+  config.vm.define "yrignySW" do |worker|
+    worker.vm.hostname = "yrignySW"
+    worker.vm.network "private_network", ip: "192.168.56.111"
+    worker.vm.provision "shell", path: "scripts/worker.sh"
+  end
+
+end
